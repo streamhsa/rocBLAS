@@ -48,8 +48,6 @@ endfunction( )
 # Main
 # ########################################################################
 
-# This is incremented when the ABI to the library changes
-set( rocblas_SOVERSION 0.1 )
 
 list( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 

@@ -134,6 +134,9 @@ add_library( rocblas
 
 add_library( roc::rocblas ALIAS rocblas )
 
+set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--rpath,$ENV{ROCM_RPATH}" )
+
+
 # Remove this check when we no longer build with older rocm stack(ie < 1.8.2)
 if(TARGET hip::device)
 target_link_libraries( rocblas PRIVATE hip::device )
@@ -141,6 +144,9 @@ else()
 target_link_libraries( rocblas PRIVATE hip::hip_hcc hip::hip_device hcc::hccshared )
 endif()
 
+# This is incremented when the ABI to the library changes
+set_target_properties(rocblas PROPERTIES SOVERSION ${LIB_VERSION_MAJOR} )
+set_target_properties(rocblas PROPERTIES VERSION ${LIB_VERSION_STRING} )
 set_target_properties( rocblas PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED ON )
 
 if( CMAKE_CXX_COMPILER MATCHES ".*/hcc$" )
@@ -169,7 +175,6 @@ if( BUILD_WITH_TENSILE )
   target_compile_definitions( rocblas PRIVATE BUILD_WITH_TENSILE=1 )
 endif()
 
-rocm_set_soversion( rocblas ${rocblas_SOVERSION} )
 set_target_properties( rocblas PROPERTIES CXX_EXTENSIONS NO )
 set_target_properties( rocblas PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/staging" )
 
